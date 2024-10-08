@@ -9,9 +9,22 @@ import { ResultsGamesModule } from './results-games/results-games.module';
 import { ChampionsModule } from './champions/champions.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { credentialsDb } from './common/database/dbConfig/db.config';
 
 @Module({
-  imports: [UsersModule, RolesModule, TournamentsModule, PlayersModule, PendingGamesModule, PositionsModule, ResultsGamesModule, ChampionsModule, AuthModule, CommonModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal:true,
+      envFilePath:".env"
+    }),
+    TypeOrmModule.forRootAsync({
+      imports:[ConfigModule],
+      inject:[ConfigService],
+      useClass:credentialsDb
+    })
+    ,UsersModule, RolesModule, TournamentsModule, PlayersModule, PendingGamesModule, PositionsModule, ResultsGamesModule, ChampionsModule, AuthModule, CommonModule],
   controllers: [],
   providers: [],
 })
