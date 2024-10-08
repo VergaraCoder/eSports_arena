@@ -7,9 +7,9 @@ import { UpdatePendingGameDto } from './dto/update-pending_game.dto';
 export class PendingGamesController {
   constructor(private readonly pendingGamesService: PendingGamesService) {}
 
-  @Post()
-  create(@Body() createPendingGameDto: CreatePendingGameDto) {
-    return this.pendingGamesService.create(createPendingGameDto);
+  @Post(":id")
+  createGames(@Param("id") idTournamet:string,@Body() data:any) {
+    return this.pendingGamesService.create(+idTournamet,data);
   }
 
   @Get()
