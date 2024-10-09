@@ -16,48 +16,26 @@ export class PendingGamesService {
   async create(idTournament:number,data?:any) {
     try{
       const dataPlayers=data;
-      const cant=6;
-      let numbers=[];
-      let number=0;
-      //console.log(dataPlayers);
-      while(numbers.length<=cant){
-        console.log("VUELTA "+number);
-        
+      const cant=data.length;
+      let everyOnePlayers=[];
+      while(everyOnePlayers.length<cant){
         const quantity=dataPlayers.length;
         let numberPlayer1=Math.round(Math.random()*quantity);
-        // if(numbers.includes(numberPlayer1)){
-        //   while(numbers.includes(numberPlayer1)){
-        //    // console.log("la cantidad de registros es ", quantity);
-            
-        //     //console.log("Array numbers esta" );
-        //     //console.log(numbers);
-            
-            
-        //     //console.log(Math.random()*quantity);
-            
-        //     numberPlayer1=Math.round(Math.random()*quantity);
-        //     //console.log(numberPlayer1);
-            
-        //   }
-        // }
-        numberPlayer1 > cant ? numberPlayer1-1 : numberPlayer1;
+        numberPlayer1 > quantity ? numberPlayer1-1 : numberPlayer1;
         
-        
-        numbers.push(numberPlayer1);
-
-        console.log(data[number].player.nickName);
-        number++;
+        if(data[numberPlayer1]!==undefined){
+          everyOnePlayers.push(data[numberPlayer1].player.nickName);         
+        }        
         data.splice(numberPlayer1,1);
-        console.log("la cuenta va en ");
-        
-        console.log(numbers.length);
-        
+      }
 
+      for(const x of everyOnePlayers){
         
       }
+      return everyOnePlayers;
       
     }catch(err:any){
-
+      throw err;
     }
   }
 
