@@ -20,5 +20,8 @@ import { TournamentPlayer } from './entities/tournament-player.entity';
     TournamentPlayerService,
     FilterDataServiceTournamentPlayer
   ],
+  exports:[
+    TournamentPlayerService
+  ]
 })
 export class TournamentPlayerModule {}

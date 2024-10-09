@@ -57,6 +57,8 @@ export class PlayersService {
 
   async findPlayerByNickName(nickName:string,verify?:boolean){
     try{
+      console.log("the nick is");
+      
       console.log(nickName);
       
       const dataPlayer=await this.playerRepository.findOne({where:{nickName:nickName}});

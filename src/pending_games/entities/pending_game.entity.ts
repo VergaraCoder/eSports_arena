@@ -20,13 +20,13 @@ export class PendingGame {
     @Column()
     date:Date;
 
-    @ManyToOne(()=>Player,player1=>player1.pendingGame1)
+    @ManyToOne(()=>Player,player1=>player1.pendingGame1,{eager:true})
     player1:Player;
 
-    @ManyToOne(()=>Player,player2=>player2.pendingGame2)
+    @ManyToOne(()=>Player,player2=>player2.pendingGame2,{eager:true})
     player2:Player;
 
-    @ManyToOne(()=>Tournament,tournament=>tournament.pendingGame)
+    @ManyToOne(()=>Tournament,tournament=>tournament.pendingGame,{eager:true})
     tournament:Tournament;
 
     @OneToMany(()=>ResultsGame,resultGame=>resultGame.pendingGame)

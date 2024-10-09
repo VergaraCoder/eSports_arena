@@ -2,19 +2,20 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PendingGamesService } from './pending_games.service';
 import { CreatePendingGameDto } from './dto/create-pending_game.dto';
 import { UpdatePendingGameDto } from './dto/update-pending_game.dto';
+import { Tournament } from 'src/tournaments/entities/tournament.entity';
 
 @Controller('pending-games')
 export class PendingGamesController {
   constructor(private readonly pendingGamesService: PendingGamesService) {}
 
-  @Post(":id")
-  createGames(@Param("id") idTournamet:string,@Body() data:any) {
-    return this.pendingGamesService.create(+idTournamet,data);
+  @Post()
+  createGames(@Body() data:any) {
+    return this.pendingGamesService.create(data);
   }
 
-  @Get()
-  findAll() {
-    return this.pendingGamesService.findAll();
+  @Get("all/:id")
+  findAll(@Param("id") tournament:string) {
+    return this.pendingGamesService.findAll(+tournament);
   }
 
   @Get(':id')
