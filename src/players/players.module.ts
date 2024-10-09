@@ -8,12 +8,12 @@ import { TournamentsModule } from 'src/tournaments/tournaments.module';
 @Module({
   imports:[
     TypeOrmModule.forFeature([Player]),
-    forwardRef(()=>TournamentsModule)
   ],
   controllers: [PlayersController],
   providers: [PlayersService],
   exports:[
-    TypeOrmModule
+    TypeOrmModule,
+    PlayersService
   ]
 })
 export class PlayersModule {}

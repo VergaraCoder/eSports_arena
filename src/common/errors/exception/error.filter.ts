@@ -14,6 +14,8 @@ export class ErrorFilter implements ExceptionFilter{
         const ifExist=exception.message.split(" :: ");
         const ifExist2=exception.response;
 
+        console.log(exception);
+        
 
         if(ifExist2 && ifExist2.message){
             console.log("enter the first");
@@ -36,7 +38,7 @@ export class ErrorFilter implements ExceptionFilter{
         else{
             console.log("enter the three");
             
-            resp=ifExist2 ? ifExist2.error : "INTERNALSERVER";
+            resp="INTERNAL SERVER ERROR";
             status= 500;
         }
         console.log("the message is");

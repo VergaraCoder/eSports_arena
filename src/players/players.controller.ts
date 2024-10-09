@@ -8,7 +8,7 @@ export class PlayersController {
   constructor(private readonly playersService: PlayersService) {}
 
   @Post()
-  create(@Body() createPlayerDto: CreatePlayerDto) {
+  create(@Body() createPlayerDto: any) {
     return this.playersService.create(createPlayerDto);
   }
 
