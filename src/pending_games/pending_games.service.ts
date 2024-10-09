@@ -109,7 +109,18 @@ export class PendingGamesService {
 
 
   async findOne(id: number) {
-    return `This action returns a #${id} pendingGame`;
+    try{
+      const gameOne=await this.pendigGameRepository.findOneBy({id:id});
+      if(!gameOne){
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"DOES THERE ARE REGISTERS"
+        });
+      }
+      return gameOne;
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
   }
 
   async update(id: number, updatePendingGameDto: UpdatePendingGameDto) {

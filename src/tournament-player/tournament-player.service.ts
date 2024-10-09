@@ -46,6 +46,25 @@ export class TournamentPlayerService {
     }
   }
 
+
+
+  async findOneByPlayerId(playerId:number,tournamentId:number){
+    try{    
+      const returnData=await this.tournamentPlayerRepository.findOneBy({playerId:playerId});
+      if(!returnData || (returnData.tournamentId !== tournamentId )){
+        console.log("enter error");
+        
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"THIS USER NOT EXIST IN THIS TOURNAMENT"
+        });
+      }
+      return returnData;
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
+  }
+
   async findAll(tournamentId:number) {
     try{
       const dataPlayer=await this.tournamentPlayerRepository.findBy({tournamentId:tournamentId});

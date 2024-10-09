@@ -16,6 +16,9 @@ import { TournamentPlayerModule } from 'src/tournament-player/tournament-player.
   ],
   controllers: [PendingGamesController],
   providers: [PendingGamesService],
-  exports:[TypeOrmModule]
+  exports:[
+    TypeOrmModule,
+    PendingGamesService
+  ]
 })
 export class PendingGamesModule {}
