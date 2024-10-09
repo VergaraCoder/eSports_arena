@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreatePlayerDto {
-    @IsNotEmpty()
-    @IsString()
-    nickname:string;
-}
+// export class CreatePlayerDto {
+//     @IsNotEmpty()
+//     @IsString()
+//     nickname:string;
+// }
