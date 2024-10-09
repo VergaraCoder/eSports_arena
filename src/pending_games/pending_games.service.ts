@@ -76,9 +76,10 @@ export class PendingGamesService {
       }        
       dataPlayers.splice(numberPlayer1,1);
     }
-
     return everyOnePlayers;
   }
+
+
   async findAll(idTournament:number) {
     try{  
       const games=await this.pendigGameRepository.find({where:{tournamentId:idTournament}});
@@ -88,21 +89,45 @@ export class PendingGamesService {
           message:"DOES THERE ARE REGISTERS"
         });
       }
-      return games;
+      return this.organizeData(games);
     }catch(err:any){
       throw manageError.signedError(err.message);
     }
   }
 
-  findOne(id: number) {
+
+   organizeData(response:any){
+     let response2=[];
+      for(const only in response){    
+        response2.push({
+          player1:response[only].player1,
+          player2:response[only].player2
+        });
+      }
+      return response2;
+  }
+
+
+  async findOne(id: number) {
     return `This action returns a #${id} pendingGame`;
   }
 
-  update(id: number, updatePendingGameDto: UpdatePendingGameDto) {
+  async update(id: number, updatePendingGameDto: UpdatePendingGameDto) {
     return `This action updates a #${id} pendingGame`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pendingGame`;
+  async remove(id: number) {
+    try{
+      const {affected}=await this.pendigGameRepository.delete(id);
+      if(affected==0){
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"FAILTED TO REMOVE GAME"
+        });
+      }
+      return "perfectly deleted";
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
   }
 }
