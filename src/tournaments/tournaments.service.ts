@@ -4,13 +4,16 @@ import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tournament } from './entities/tournament.entity';
 import { Repository } from 'typeorm';
+import { manageError } from 'src/common/errors/custom/manage.error';
+import { FilterDataService } from './filterData/filter.data';
 
 @Injectable()
 export class TournamentsService {
 
   constructor(
     @InjectRepository(Tournament)
-    private tournamentRepository:Repository<Tournament>
+    private tournamentRepository:Repository<Tournament>,
+    private FilterData:FilterDataService
   ){}
 
   async create(createTournamentDto: CreateTournamentDto) {
@@ -20,11 +23,24 @@ export class TournamentsService {
   async findAll(querys?:any) {
     try{
       if(Object.values(querys).every(item=>item !== undefined)){
-
+        return await this.FilterData.returnResults(this.tournamentRepository,querys);
       }
       const tournaments=await this.tournamentRepository.find();
       if(tournaments.length==0){
-        //throw new ma
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"TOURNAMENTS NOT FOUND"
+        });
+      }
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
+  }
+
+  async createPlayersOfTournament(data:any){
+    try{
+      for(const player of data){
+        //const dataQuerys
       }
     }catch(err:any){
 
