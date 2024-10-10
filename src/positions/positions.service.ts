@@ -1,23 +1,73 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePositionDto } from './dto/create-position.dto';
 import { UpdatePositionDto } from './dto/update-position.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Position } from './entities/position.entity';
+import { Repository } from 'typeorm';
+import { manageError } from 'src/common/errors/custom/manage.error';
 
 @Injectable()
 export class PositionsService {
-  create(createPositionDto: CreatePositionDto) {
-    return 'This action adds a new position';
+
+  constructor(
+    @InjectRepository(Position)
+    private positionRepository:Repository<Position>
+  ){}
+
+  async create(createPosition: any) {
+    try{
+      const dataPlayer=this.positionRepository.create(createPosition);
+      await this.positionRepository.save(dataPlayer);
+      return dataPlayer;
+    }catch(err:any){
+      throw err;
+    }
   }
 
   findAll() {
     return `This action returns all positions`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} position`;
+  async findOneByScore(tournamentId: number,score:number) {
+    try{
+      const data=await this.positionRepository.findBy({tournamentId:tournamentId, score:score});
+      if(!data){
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"DOES THERE ARE NOT POSITION WITH THAT TOURNAMENTID AND THAT SCORE. "
+        });
+      }
+      return data;
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
   }
 
-  update(id: number, updatePositionDto: UpdatePositionDto) {
-    return `This action updates a #${id} position`;
+  async findOneByPlayerId(idPlayer: number) {
+    const data= await this.positionRepository.findOneBy({playerId:idPlayer});
+    if(data){
+      return {
+        id:data.id,
+        score:data.score
+      }
+    }else{
+      return {};
+    }
+  }
+
+  async update(id: number, updatePositionDto: UpdatePositionDto) {
+    try{
+      const {affected} =await this.positionRepository.update(id,updatePositionDto);
+      if(affected==0){
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"FAILTED TO UPDATE POSITION."
+        });
+      }
+      return "perfectly updated";
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
   }
 
   remove(id: number) {

@@ -38,16 +38,55 @@ export class FilterDataServiceTournamentPlayer{
         console.log("enter to verify");
         let nicks=nickNames.map(item=>item.nickName);
         
+        console.log(nicks);
+        
         const data=await builder
         .innerJoin("tournamentPlayer.player","players")
         .where("players.nickName IN (:...nick)",{nick:nicks})
         .andWhere("tournamentPlayer.playerId=players.id")
         .getMany();
         try{            
+            console.log("data is ");
+            console.log(data);
+            
             if(data.length !== 0 ){
                 throw new manageError({
                     type:"CONFLICT",
                     message:"SOME NICKNAME ALREADY EXIST IN THIS TOURNAMENTE"
+                });
+            }
+            return true;
+        }catch(err:any){
+            throw manageError.signedError(err.message);
+        }
+    }
+
+    async verifyTournament(tournament:any,players:any){
+        try{
+            
+            const numPlayers=players.length;
+
+            const currentnumberPlayers=tournament.currentNumberPlayers;
+
+            const maximPlayer=tournament.maximunPlayers;
+
+            const totalWithAdition=currentnumberPlayers+numPlayers;
+
+            const verification= maximPlayer-currentnumberPlayers;
+
+            const operation= maximPlayer-totalWithAdition;
+
+
+            if(verification==0){
+                throw new manageError({
+                     type:"BAD_REQUEST",
+                    message:`YOU CANNOT ENTER MORE PLAYERS BECAUSE THE SPOTS ARE ALREADY FULL.`
+                });
+            }
+            if(operation<0){
+                throw new manageError({
+                    type:"BAD_REQUEST",
+                    message:`THE TOTAL NUMBER OF PLAYERS IN THE TOURNAMENT ${tournament.nameTournament} WAS EXCEEDED BY ${Math.abs(operation)} PLAYERS THEREFORE REDUCES THE NUMBER.`
                 });
             }
             return true;

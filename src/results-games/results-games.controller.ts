@@ -12,6 +12,11 @@ export class ResultsGamesController {
     return this.resultsGamesService.create(createResultsGameDto);
   }
 
+  @Post()
+  async finally(){
+    return await this.resultsGamesService;
+  }
+
   @Get()
   findAll() {
     return this.resultsGamesService.findAll();

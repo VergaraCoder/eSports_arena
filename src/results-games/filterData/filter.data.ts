@@ -4,6 +4,7 @@ import { TournamentsService } from "src/tournaments/tournaments.service";
 import { TournamentPlayerService } from "src/tournament-player/tournament-player.service";
 import { manageError } from "src/common/errors/custom/manage.error";
 import { Injectable } from "@nestjs/common";
+import { PositionsService } from "src/positions/positions.service";
 
 @Injectable()
 export class validateDataFilterResultGame{
@@ -45,8 +46,10 @@ export class validateDataFilterResultGame{
     }
 
     private async verifyPlayerWithGame(gameData:any,players:number[]){
-        try{            
-            if(gameData.player1Id !== players[0] || gameData.player2Id !== players[1]){
+        try{     
+            const idPlayers=[gameData.player1Id,gameData.player2Id];
+        
+            if(!idPlayers.includes(players[0]) && !idPlayers.includes(players[1])){
                 throw new manageError({
                     type:"CONFLICT",
                     message:"PLAYERS DO NOT BELONG TO THIS GAME."

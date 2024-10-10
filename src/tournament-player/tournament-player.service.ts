@@ -25,7 +25,8 @@ export class TournamentPlayerService {
         const idTournament=createPlayerTournament.tournamentId;
         const players=createPlayerTournament.players;
         const tournament=await this.tournamentService.findOne(idTournament);
-
+        
+        await this.filterDataTourPlayer.verifyTournament(tournament,players);
         await this.filterDataTourPlayer.returnResults(this.tournamentPlayerRepository,players,"verify");
 
             

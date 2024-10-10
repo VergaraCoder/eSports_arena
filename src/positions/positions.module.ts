@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Position } from './entities/position.entity';
 import { TournamentsModule } from 'src/tournaments/tournaments.module';
 import { PlayersModule } from 'src/players/players.module';
+import { FilterDataPositionService } from './filterData/filter.position';
 
 @Module({
   imports:[
@@ -14,7 +15,17 @@ import { PlayersModule } from 'src/players/players.module';
     TournamentsModule,
     PlayersModule
   ],
-  controllers: [PositionsController],
-  providers: [PositionsService],
+  controllers: [
+    PositionsController
+  ],
+  providers: [
+    PositionsService,
+    FilterDataPositionService
+  ],
+  exports:[
+    TypeOrmModule,
+    PositionsService,
+    FilterDataPositionService
+  ]
 })
 export class PositionsModule {}

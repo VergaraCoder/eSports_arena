@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { TournamentPlayerService } from 'src/tournament-player/tournament-player.service';
 import { PlayersService } from 'src/players/players.service';
 import { manageError } from 'src/common/errors/custom/manage.error';
+import { filterDataServiceGames } from './filterData/filter.data';
 
 @Injectable()
 export class PendingGamesService {
@@ -15,13 +16,16 @@ export class PendingGamesService {
     @InjectRepository(PendingGame)
     private pendigGameRepository:Repository<PendingGame>,
     private tournamentPlayerService:TournamentPlayerService,
-    private playerService:PlayersService
+    private playerService:PlayersService,
+    private filterData:filterDataServiceGames
   ){}
 
   async create(data:any) {
     try{
-      const dataPlayers=await this.tournamentPlayerService.findAll(data.idTournament);
 
+      await this.filterData.verifyTotalPlayer(data.idTournament);
+
+      const dataPlayers=await this.tournamentPlayerService.findAll(data.idTournament);
       
       const dataToCreate=await this.randomOrder(dataPlayers);
       
@@ -78,6 +82,27 @@ export class PendingGamesService {
     }
     return everyOnePlayers;
   }
+
+
+  
+  async creationOfFinally(data:any){
+    try{
+      const finalRivals=await this.filterData.validateScore(data.idTournament);
+     
+      const dataCreated=this.pendigGameRepository.create({
+        player1Id:finalRivals[0].playerId,
+        player2Id:finalRivals[1].playerId,
+        date:data.date,
+        tournamentId:data.idTournament
+      });
+      await this.pendigGameRepository.save(dataCreated);
+      return dataCreated;
+    }catch(err:any){
+      throw err;
+    }
+  }
+
+
 
 
   async findAll(idTournament:number) {

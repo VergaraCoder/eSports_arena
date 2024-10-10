@@ -6,16 +6,22 @@ import { PendingGame } from './entities/pending_game.entity';
 import { TournamentsModule } from 'src/tournaments/tournaments.module';
 import { PlayersModule } from 'src/players/players.module';
 import { TournamentPlayerModule } from 'src/tournament-player/tournament-player.module';
+import { filterDataServiceGames } from './filterData/filter.data';
+import { PositionsModule } from 'src/positions/positions.module';
 
 @Module({
   imports:[
     TypeOrmModule.forFeature([PendingGame]),
     TournamentsModule,
     PlayersModule,
-    TournamentPlayerModule
+    TournamentPlayerModule,
+    PositionsModule
   ],
   controllers: [PendingGamesController],
-  providers: [PendingGamesService],
+  providers: [
+    PendingGamesService,
+    filterDataServiceGames
+  ],
   exports:[
     TypeOrmModule,
     PendingGamesService

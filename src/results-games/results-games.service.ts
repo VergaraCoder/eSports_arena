@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { PendingGamesService } from 'src/pending_games/pending_games.service';
 import { manageError } from 'src/common/errors/custom/manage.error';
 import { validateDataFilterResultGame } from './filterData/filter.data';
+import { FilterDataPositionService } from 'src/positions/filterData/filter.position';
 
 @Injectable()
 export class ResultsGamesService {
@@ -15,10 +16,11 @@ export class ResultsGamesService {
     @InjectRepository(ResultsGame)
     private resultRepository:Repository<ResultsGame>,
     private gameService:PendingGamesService,
-    private filterData:validateDataFilterResultGame
+    private filterData:validateDataFilterResultGame,
+    private filterPosition:FilterDataPositionService
   ){}
 
-  async create(createResultsGameDto: any) {
+  async create(createResultsGameDto: CreateResultsGameDto) {
     try{
       const idGame=createResultsGameDto.gameId;
       const playerWiiner= createResultsGameDto.winner;
@@ -29,6 +31,12 @@ export class ResultsGamesService {
         players:[playerWiiner, playerLossed],
         tournamentId:tournamentId,
         gameId:idGame
+      });
+
+      await this.filterPosition.filterCreationOfPositions({
+        winner:playerWiiner,
+        lossed:playerLossed,
+        tournamentId:tournamentId
       });
 
       const game=await this.gameService.findOne(idGame);
@@ -46,6 +54,7 @@ export class ResultsGamesService {
       throw manageError.signedError(err.message);
     }
   }
+
 
   async findAll() {
     try{

@@ -13,6 +13,11 @@ export class PendingGamesController {
     return this.pendingGamesService.create(data);
   }
 
+  @Post("final")
+  async createFinal(@Body() data:any){
+    return await this.pendingGamesService.creationOfFinally(data);
+  }
+
   @Get("all/:id")
   findAll(@Param("id") tournament:string) {
     return this.pendingGamesService.findAll(+tournament);

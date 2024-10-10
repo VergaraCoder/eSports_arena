@@ -53,7 +53,18 @@ export class PlayersService {
   }
 
   async findAll() {
-    return `This action returns all players`;
+    try{
+      const players=await this.playerRepository.find();
+      if(players.length==0){
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"PLAYERS NOT FOUND"
+        });
+      }
+      return players;
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
   }
 
   async findPlayerByNickName(nickName: string, verify?: boolean) {

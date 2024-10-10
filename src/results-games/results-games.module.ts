@@ -8,6 +8,7 @@ import { PlayersModule } from 'src/players/players.module';
 import { PendingGamesModule } from 'src/pending_games/pending_games.module';
 import { validateDataFilterResultGame } from './filterData/filter.data';
 import { TournamentPlayerModule } from 'src/tournament-player/tournament-player.module';
+import { PositionsModule } from 'src/positions/positions.module';
 
 @Module({
   imports:[
@@ -15,7 +16,8 @@ import { TournamentPlayerModule } from 'src/tournament-player/tournament-player.
     TournamentsModule,
     PlayersModule,
     PendingGamesModule,
-    TournamentPlayerModule
+    TournamentPlayerModule,
+    PositionsModule
   ],
   controllers: [ResultsGamesController],
   providers: [
