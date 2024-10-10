@@ -11,7 +11,8 @@ import { Role } from './entities/role.entity';
   controllers: [RolesController],
   providers: [RolesService],
   exports:[
-    TypeOrmModule
+    TypeOrmModule,
+    RolesService
   ]
 })
 export class RolesModule {}
