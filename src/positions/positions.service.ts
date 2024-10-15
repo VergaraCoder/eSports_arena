@@ -28,6 +28,22 @@ export class PositionsService {
     return `This action returns all positions`;
   }
 
+
+  async findAllByTournamentId(IdTournament:number){
+    try{
+      const alls=await this.positionRepository.findBy({tournamentId:IdTournament});
+      if(alls.length==0){
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"DOES THERE ARE REGISTER FOR MAKE CHAMPION."
+        });
+      }
+      return alls;
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
+  }
+
   async findOneByScore(tournamentId: number,score:number) {
     try{
       const data=await this.positionRepository.findBy({tournamentId:tournamentId, score:score});

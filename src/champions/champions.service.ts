@@ -1,11 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChampionDto } from './dto/create-champion.dto';
 import { UpdateChampionDto } from './dto/update-champion.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Champion } from './entities/champion.entity';
+import { Repository } from 'typeorm';
+import { FilterDataServiceChampion } from './filterData/filterData';
 
 @Injectable()
 export class ChampionsService {
-  create(createChampionDto: CreateChampionDto) {
-    return 'This action adds a new champion';
+
+  constructor(
+    @InjectRepository(Champion)
+    private championRepository:Repository<Champion>,
+    private filterData:FilterDataServiceChampion
+  ){}
+
+  async create(createChampion: any) {
+    try{
+      const theMostBig=await this.filterData.returnTheHihgtsScore(createChampion.idTournament);
+
+      const dataCreated=this.championRepository.create({
+        playerId:theMostBig.playerId,
+        tournamentId:theMostBig.tournamentId
+      });
+      await this.championRepository.save(dataCreated);
+      return dataCreated;
+    }catch(err:any){
+      throw err;
+    }
   }
 
   findAll() {
