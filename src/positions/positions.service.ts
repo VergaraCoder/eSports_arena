@@ -5,13 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Position } from './entities/position.entity';
 import { Repository } from 'typeorm';
 import { manageError } from 'src/common/errors/custom/manage.error';
+import { QuerysBuilder } from './querysBuilders/querysCustom';
 
 @Injectable()
 export class PositionsService {
 
   constructor(
     @InjectRepository(Position)
-    private positionRepository:Repository<Position>
+    private positionRepository:Repository<Position>,
+    private queryBuilder:QuerysBuilder
   ){}
 
   async create(createPosition: any) {
@@ -24,12 +26,24 @@ export class PositionsService {
     }
   }
 
-  findAll() {
-    return `This action returns all positions`;
+  async findAll() {
+    try{
+      const registers=await this.positionRepository.find();
+      if(registers.length==0)
+      {
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"REGISTERS NOT FOUDN ."
+        });
+      } 
+      return registers;
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
   }
 
 
-  async findAllByTournamentId(IdTournament:number){
+  async findAllByTournamentId(IdTournament:number,querys?:any){
     try{
       const alls=await this.positionRepository.findBy({tournamentId:IdTournament});
       if(alls.length==0){
@@ -54,6 +68,23 @@ export class PositionsService {
         });
       }
       return data;
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
+  }
+
+  async findOneScoreByTournament(querys:any){
+    try{
+      const builder=await this.queryBuilder.returnResults(this.positionRepository,"all",querys);
+      console.log(builder);
+      
+      if(!builder){
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"DOES THERE ARE REGISTERS OF TORUNAMENT ."
+        });
+      }
+      return builder;
     }catch(err:any){
       throw manageError.signedError(err.message);
     }
@@ -86,7 +117,18 @@ export class PositionsService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} position`;
+  async remove(id: number) {
+    try{
+      const {affected}=await this.positionRepository.delete(id);
+      if(affected==0){
+        throw new manageError({
+          type:"NOT_FOUND",
+          message:"DOES THERE ARE REGISTERS NOT FOUND ."
+        });
+      }
+      return "Perfectly removed";
+    }catch(err:any){
+      throw manageError.signedError(err.message);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PositionsService } from './positions.service';
 import { CreatePositionDto } from './dto/create-position.dto';
 import { UpdatePositionDto } from './dto/update-position.dto';
@@ -15,6 +15,20 @@ export class PositionsController {
   @Get()
   findAll() {
     return this.positionsService.findAll();
+  }
+
+  @Get("one")
+  async findOneByHigtScore(
+    @Query("idTournament") tournament:number
+  ){
+    return await this.positionsService.findOneScoreByTournament({idTournament:tournament});
+  }
+  
+  @Get(":id")
+  findAllByTournamentId(
+    @Param("id") id:number
+  ) {
+    return this.positionsService.findAllByTournamentId(id);
   }
 
   // @Get(':id')

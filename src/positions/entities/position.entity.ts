@@ -16,9 +16,9 @@ export class Position {
     @Column()
     score:number;
 
-    @ManyToOne(()=>Tournament,tournament=>tournament)
+    @ManyToOne(()=>Tournament,tournament=>tournament.position)
     tournament:Tournament;
 
-    @ManyToOne(()=>Player,player=>player)
+    @ManyToOne(()=>Player,player=>player.position)
     player:Player;
 }

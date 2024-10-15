@@ -6,6 +6,7 @@ import { Position } from './entities/position.entity';
 import { TournamentsModule } from 'src/tournaments/tournaments.module';
 import { PlayersModule } from 'src/players/players.module';
 import { FilterDataPositionService } from './filterData/filter.position';
+import { QuerysBuilder } from './querysBuilders/querysCustom';
 
 @Module({
   imports:[
@@ -20,7 +21,8 @@ import { FilterDataPositionService } from './filterData/filter.position';
   ],
   providers: [
     PositionsService,
-    FilterDataPositionService
+    FilterDataPositionService,
+    QuerysBuilder
   ],
   exports:[
     TypeOrmModule,
